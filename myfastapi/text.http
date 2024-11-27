@@ -1,0 +1,23 @@
+@host=http://localhost:8000/api
+
+###
+POST  {{host}}/auth/register
+Content-Type: application/json
+
+{
+    "username": "xiaoyan123",
+    "password": "123456"
+}
+
+###
+POST  {{host}}/auth/login
+Content-Type: multipart/form-data;
+
+
+
+
+
+
+
+
+
