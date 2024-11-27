@@ -21,5 +21,5 @@ app = FastAPI(lifespan=lifesapn)
 app.include_router(upload.router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth")
 
-
-app.mount("/upload", StaticFiles(directory="upload"), name="upload")
+if os.path.exists("upload"):
+    app.mount("/upload", StaticFiles(directory="upload"), name="upload")

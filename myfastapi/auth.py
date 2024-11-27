@@ -121,8 +121,7 @@ def login(
 def me(*, current_user: User = Depends(get_current_user), request: Request):
     """获取当前用户信息"""
     if not current_user.avatar.startswith("http"):
-        base_url = f"{request.url.scheme}://{request.url.hostname}:{request.url.port}"
-        current_user.avatar = f"{base_url}/{current_user.avatar}"
+        current_user.avatar = str(request.url_for("upload", path=current_user.avatar))
     return current_user
 
 
