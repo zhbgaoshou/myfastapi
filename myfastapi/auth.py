@@ -6,11 +6,13 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from database import engine
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
+import config
 
+UPLOAD_DIR = config.UPLOAD_DIR
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
 KEY = "trewtrewtrewtrewt547i87o98otregrewgfhtyryutewtreuytjuyitu"
 ALGO = "HS256"
@@ -121,7 +123,7 @@ def login(
 def me(*, current_user: User = Depends(get_current_user), request: Request):
     """获取当前用户信息"""
     if not current_user.avatar.startswith("http"):
-        current_user.avatar = str(request.url_for("upload", path=current_user.avatar))
+        current_user.avatar = str(request.url_for(UPLOAD_DIR, path=current_user.avatar))
     return current_user
 
 
