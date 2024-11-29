@@ -6,7 +6,14 @@ import oss2
 from oss2.credentials import EnvironmentVariableCredentialsProvider
 from auth import get_current_user
 
-from config import UPLOAD_DIR, endpoint, bucket_name, region
+from config import (
+    UPLOAD_DIR,
+    endpoint,
+    bucket_name,
+    region,
+    UPLOAD_OSS_DIR,
+    OSS_STATIC_NETWORK_URL,
+)
 
 
 load_dotenv()
@@ -46,13 +53,13 @@ def get_bucket():
 @router.post("/upload_oss", dependencies=[Depends(get_current_user)])
 async def upload_file(file: UploadFile = File(...), bucket=Depends(get_bucket)):
     file_name = generate_file_name(file.filename)
-    key = f"{config.UPLOAD_OSS_DIR}/{file_name}"
+    key = f"{UPLOAD_OSS_DIR}/{file_name}"
     try:
         result = bucket.put_object(key, await file.read())
         if result.status != 200:
             return {"success": False, "message": "上传失败"}
         else:
-            return {"success": True, "url": f"{config.OSS_STATIC_NETWORK_URL}/{key}"}
+            return {"success": True, "url": f"{OSS_STATIC_NETWORK_URL}/{key}"}
     except oss2.exceptions.OssError as oe:
         raise HTTPException(status_code=500, detail=f"上传失败: {oe}")
     except Exception as e:
