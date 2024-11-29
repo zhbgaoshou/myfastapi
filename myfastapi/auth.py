@@ -6,18 +6,19 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from database import engine
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
-import config
+from config import (
+    KEY,
+    UPLOAD_DIR,
+    TOKEN_EXPIRE_MINUTES,
+    ALGO,
+    REFRESH_TOKEN_EXPIRE_DAYS,
+)
 
-UPLOAD_DIR = config.UPLOAD_DIR
+UPLOAD_DIR = UPLOAD_DIR
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
-
-KEY = "trewtrewtrewtrewt547i87o98otregrewgfhtyryutewtreuytjuyitu"
-ALGO = "HS256"
-TOKEN_EXPIRE_MINUTES = 15
-REFRESH_TOKEN_EXPIRE_DAYS = 30
 
 
 def get_session():
@@ -105,7 +106,7 @@ def login(
     toekn = create_token(to_encode)
     refresh_token = create_token(
         to_encode,
-        expire=datetime.now(timezone.utc) + timedelta(days=30),
+        expire=datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
         refresh=True,
     )
 
